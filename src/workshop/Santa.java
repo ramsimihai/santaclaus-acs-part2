@@ -81,7 +81,7 @@ public final class Santa {
     }
 
     /**
-     * MY JOB STARSTS! NOW! delivery in noYears gifts to good kiddos 100%
+     * MY JOB STARSTS! NOW! gifts delivery in noYears to good kiddos 100%
      * @return a JSONArray used to build the output
      */
     public JSONArray startDelivery() {
@@ -332,6 +332,8 @@ public final class Santa {
     public void onlyYellowElvesWork() {
         for (Child child : children) {
             if (child.getElf().getName().equals("yellow")) {
+                // used instanceof cause the only elf that does the work is the yellow one
+                // and didnt want to add the child field in the other types of elves
                 if (child.getElf() instanceof YellowElf) {
                     ((YellowElf) child.getElf()).setUnluckyKiddo(child);
                     child.getElf().execute();
