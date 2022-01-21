@@ -7,7 +7,7 @@ public abstract class Elf {
     public Elf() {
     }
 
-    public Elf(String name) {
+    public Elf(final String name) {
         this.name = name;
     }
 
@@ -15,7 +15,7 @@ public abstract class Elf {
         this.budget = budget;
     }
 
-    public String getName() {
+    public final String getName() {
         return name;
     }
 

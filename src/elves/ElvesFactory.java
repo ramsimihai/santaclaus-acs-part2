@@ -4,7 +4,6 @@ public class ElvesFactory {
     /**
      * factory to create elves that executes a function
      * @param name the name of the type of elf
-     * @return
      */
     public Elf createElf(final String name) {
         switch (name) {

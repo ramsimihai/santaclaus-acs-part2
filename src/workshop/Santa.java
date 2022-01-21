@@ -17,6 +17,7 @@ import children.ChildUpdates;
 import gifts.Gift;
 import memory.AnnualChanges;
 import memory.InitialData;
+import output.ChildrenOutput;
 import updates.ChangeOfTheYear;
 
 import org.json.simple.JSONArray;
@@ -25,10 +26,18 @@ import org.json.simple.JSONObject;
 import scores.AverageScoreStrategy;
 import scores.AverageScoreStrategyFactory;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static common.Constants.TEEN_NUMBER;
+import static common.Constants.ANGEL_NUMBER;
+import static common.Constants.ONE_HUNDRED;
 
 /** singleton santa, but we are santa and we are evil (jk) */
 public final class Santa {
@@ -61,20 +70,6 @@ public final class Santa {
     }
 
     /**
-     * setter of santas annual budget
-     */
-    public void setSantasBudget(final Double santasBudget) {
-        this.santasBudget = santasBudget;
-    }
-
-    /**
-     * setter of noYears to work as Santa's replacement
-     */
-    public void setNoYears(final int noYears) {
-        this.noYears = noYears;
-    }
-
-    /**
      * @return gets the instance of Database
      */
     public static Santa getInstance() {
@@ -86,12 +81,56 @@ public final class Santa {
     }
 
     /**
-     * increments ages of all childrens from the list
+     * MY JOB STARSTS! NOW! delivery in noYears gifts to good kiddos 100%
+     * @return a JSONArray used to build the output
      */
-    public void incrementsAge() {
-        for (Child child : children) {
-            child.setAge(child.getAge() + 1);
+    public JSONArray startDelivery() {
+        JSONArray annualChildrenJSON = new JSONArray();
+
+        // iterates through years
+        actualYear = 0;
+        while (true) {
+            ChangeOfTheYear annualChange = annualChanges.getChanges().get(actualYear);
+
+            // makes children changes
+            addNewChildren(annualChange);
+            deleteYoungAdults();
+            sortChildren();
+            updateChildren(annualChange);
+
+            // makes gifts changes
+            addNewGifts(annualChange);
+            sortGifts();
+
+            // calculates the averageScore and initializes the budget of santa & every children
+            getTypesOfChildren();
+            initializeBudget(annualChange);
+
+            // calculates the budget after every elf is doing their job (except yellow)
+            exceptYellowElvesWork();
+
+            // delivery of the corresponding year
+            annualChange.getStrategy().delivery();
+
+            // delivery for unlucky kiddos
+            onlyYellowElvesWork();
+
+            sortChildren();
+            // extract the output
+            JSONObject objJSON = new JSONObject();
+            objJSON.put("children", ChildrenOutput.getOutput());
+            annualChildrenJSON.add(objJSON);
+
+            if (actualYear == noYears) {
+                break;
+            }
+
+            // increments the kiddos age cause this year has ended! HAPPY NEW YEAR!
+            incrementsAge();
+            actualYear++;
         }
+
+        return annualChildrenJSON;
     }
 
     /**
@@ -125,20 +164,6 @@ public final class Santa {
         Comparator<Child> idComparator = Comparator.comparing(Child::getId);
 
         children = children.stream().sorted(idComparator).collect(Collectors.toList());
-    }
-
-    /**
-     * sorts all the gifts from the list so that every first appareance of gifts from
-     * a specified category will be the lowest priced one and directly delivered to some weird
-     * kiddo
-     */
-    public void sortGifts() {
-        Comparator<Gift> priceComparator = Comparator.comparing(Gift::getPrice);
-        Comparator<Gift> categoryComparator = Comparator.comparing(Gift::getCategory)
-                                                        .thenComparing(priceComparator);
-
-        availableGifts = availableGifts.stream().sorted(categoryComparator)
-                                                .collect(Collectors.toList());
     }
 
     /**
@@ -200,6 +225,29 @@ public final class Santa {
     }
 
     /**
+     * increments ages of all childrens from the list
+     */
+    public void incrementsAge() {
+        for (Child child : children) {
+            child.setAge(child.getAge() + 1);
+        }
+    }
+
+    /**
+     * sorts all the gifts from the list so that every first appareance of gifts from
+     * a specified category will be the lowest priced one and directly delivered to some weird
+     * kiddo
+     */
+    public void sortGifts() {
+        Comparator<Gift> priceComparator = Comparator.comparing(Gift::getPrice);
+        Comparator<Gift> categoryComparator = Comparator.comparing(Gift::getCategory)
+                .thenComparing(priceComparator);
+
+        availableGifts = availableGifts.stream().sorted(categoryComparator)
+                .collect(Collectors.toList());
+    }
+
+    /**
      * adds new gifts in the list of the gifts
      * @param change of the YEAR
      */
@@ -214,6 +262,21 @@ public final class Santa {
     }
 
     /**
+     * assigns to every children a strategy in function of the category of ages
+     * then calculates the averageScore of every children
+     */
+    public void getTypesOfChildren() {
+        AverageScoreStrategyFactory factory = new AverageScoreStrategyFactory();
+
+        for (Child child : children) {
+            AverageScoreStrategy newStrategy = factory.createStrategy(child.getAge(),
+                    child.getNiceScore());
+            child.setStrategy(newStrategy);
+            child.setAverageScore(child.getStrategy().getAverageScore());
+        }
+    }
+
+    /**
      * initialize the budget of santa in the corresponding year
      * and also the budget given for every children
      * @param change of the YEAR
@@ -224,10 +287,10 @@ public final class Santa {
         for (Child child : children) {
             Double averageScoreChild = child.getAverageScore();
 
-            averageScoreChild += averageScoreChild * child.getNiceScoreBonus() / 100;
+            averageScoreChild += averageScoreChild * child.getNiceScoreBonus() / ONE_HUNDRED;
 
-            if (averageScoreChild >= 10.0) {
-                averageScoreChild = 10.0;
+            if (averageScoreChild >= ANGEL_NUMBER) {
+                averageScoreChild = ANGEL_NUMBER;
             }
 
             child.setAverageScore(averageScoreChild);
@@ -250,7 +313,10 @@ public final class Santa {
         }
     }
 
-    public void exceptYellowElfsWork() {
+    /**
+     * executes the elves special skill, except the yellow one
+     */
+    public void exceptYellowElvesWork() {
         for (Child child : children) {
             if (!child.getElf().getName().equals("yellow")) {
                 Double childCash = child.getElf().execute();
@@ -260,7 +326,10 @@ public final class Santa {
         }
     }
 
-    public void onlyYellowElfsWork() {
+    /**
+     * executes the yellow elves' special skill
+     */
+    public void onlyYellowElvesWork() {
         for (Child child : children) {
             if (child.getElf().getName().equals("yellow")) {
                 if (child.getElf() instanceof YellowElf) {
@@ -268,21 +337,6 @@ public final class Santa {
                     child.getElf().execute();
                 }
             }
-        }
-    }
-
-    /**
-     * assigns to every children a strategy in function of the category of ages
-     * then calculates the averageScore of every children
-     */
-    public void getTypesOfChildren() {
-        AverageScoreStrategyFactory factory = new AverageScoreStrategyFactory();
-
-        for (Child child : children) {
-            AverageScoreStrategy newStrategy = factory.createStrategy(child.getAge(),
-                    child.getNiceScore());
-            child.setStrategy(newStrategy);
-            child.setAverageScore(child.getStrategy().getAverageScore());
         }
     }
 
@@ -308,7 +362,7 @@ public final class Santa {
                         child.setBudget(child.getAssignedBudget()
                                 - singleGift.getPrice());
 
-                        // decrease gifts quantity and removes
+                        // decrease gifts quantity
                         availableGifts.get(i).setQuantity(availableGifts.get(i).getQuantity() - 1);
 
                         break;
@@ -320,19 +374,9 @@ public final class Santa {
     }
 
     /**
-     * create the output in JSON format by maintaing a specified format
-     * @return a JSONArray used to build the output
+     * adds all the nice scores of the cities in a map of cities scores that is going
+     * to be used for a delivery strategy
      */
-    public JSONArray getOutput() {
-        JSONArray childrenJSON = new JSONArray();
-        for (Child child : children) {
-            JSONObject childJSON = child.getJSON();
-            childrenJSON.add(childJSON);
-        }
-
-        return childrenJSON;
-    }
-
     public void addsNiceScoreCities() {
         citiesMap.clear();
 
@@ -349,6 +393,9 @@ public final class Santa {
         }
     }
 
+    /**
+     * calculates every nice score per city for children
+     */
     public void calculatesNiceScoreCityChild() {
         for (Child child : children) {
             if (citiesMap.containsKey(child.getCity())) {
@@ -363,67 +410,19 @@ public final class Santa {
         }
     }
 
-    public void removesUnavailableGifts() {
-        if (availableGifts == null) {
-            return;
-        }
-
-        availableGifts.removeIf(gift -> gift.getQuantity() == 0);
-    }
-    /**
-     * MY JOB STARSTS! NOW! delivery in noYears gifts to good kiddos 100%
-     * @return a JSONArray used to build the output
-     */
-    public JSONArray startDelivery() {
-        JSONArray annualChildrenJSON = new JSONArray();
-
-        // iterates through years
-        actualYear = 0;
-        while (true) {
-            ChangeOfTheYear annualChange = annualChanges.getChanges().get(actualYear);
-
-            // makes children changes
-            addNewChildren(annualChange);
-            deleteYoungAdults();
-            sortChildren();
-            updateChildren(annualChange);
-
-            // makes gifts changes
-            addNewGifts(annualChange);
-            sortGifts();
-
-            // calculates the averageScore and initializes the budget of santa & every children
-            getTypesOfChildren();
-            initializeBudget(annualChange);
-
-            // calculates the budget after every elf is doing their job (except yellow)
-            exceptYellowElfsWork();
-
-            // delivery of the corresponding year
-            annualChange.getStrategy().delivery();
-
-            // delivery for unlucky kiddos
-            onlyYellowElfsWork();
-
-            // removes unavailable gifts
-
-            sortChildren();
-            // extract the output
-            JSONObject objJSON = new JSONObject();
-            objJSON.put("children", getOutput());
-            annualChildrenJSON.add(objJSON);
-
-            if (actualYear == noYears) {
-                break;
-            }
-
-            // increments the kiddos age cause this year has ended! HAPPY NEW YEAR!
-            incrementsAge();
-            actualYear++;
-        }
-
-        return annualChildrenJSON;
-    }
+//    /**
+//     * create the output in JSON format by maintaing a specified format
+//     * @return a JSONArray used to build the output
+//     */
+//    public JSONArray getOutput() {
+//        JSONArray childrenJSON = new JSONArray();
+//        for (Child child : children) {
+//            JSONObject childJSON = child.getJSON();
+//            childrenJSON.add(childJSON);
+//        }
+//
+//        return childrenJSON;
+//    }
 
     /**
      * add initial data from the extracted initial data input
@@ -610,6 +609,21 @@ public final class Santa {
     }
 
     /**
+     * setter of santas annual budget
+     */
+    public void setSantasBudget(final Double santasBudget) {
+        this.santasBudget = santasBudget;
+    }
+
+    /**
+     * setter of noYears to work as Santa's replacement
+     */
+    public void setNoYears(final int noYears) {
+        this.noYears = noYears;
+    }
+
+
+    /**
      * toString method for... (ok, you got me, i dont freakin' know)
      */
     @Override
@@ -619,6 +633,11 @@ public final class Santa {
                 + ", santasBudget=" + santasBudget
                 + ", initialData=" + initialData
                 + ", annualChanges=" + annualChanges
+                + ", children=" + children
+                + ", availableGifts=" + availableGifts
+                + ", actualYear=" + actualYear
+                + ", budgetUnit=" + budgetUnit
+                + ", citiesMap=" + citiesMap
                 + '}';
     }
 }

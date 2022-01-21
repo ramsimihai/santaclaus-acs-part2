@@ -42,7 +42,9 @@ public class ChangeOfTheYearInput {
         return newUpdates;
     }
 
-    public final List<GiftInput> getNewGifts() { return newGifts; }
+    public final List<GiftInput> getNewGifts() {
+        return newGifts;
+    }
 
     public final String getStrategy() {
         return strategy;

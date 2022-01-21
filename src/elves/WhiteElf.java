@@ -1,7 +1,7 @@
 package elves;
 
 public class WhiteElf extends Elf {
-    public WhiteElf(String name) {
+    public WhiteElf(final String name) {
         super(name);
     }
 

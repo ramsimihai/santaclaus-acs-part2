@@ -84,16 +84,16 @@ public final class ChildrenInput {
 
     @Override
     public String toString() {
-        return "ChildrenInput{" +
-                "id=" + id +
-                ", lastName='" + lastName + '\'' +
-                ", firstName='" + firstName + '\'' +
-                ", age=" + age +
-                ", city='" + city + '\'' +
-                ", niceScore=" + niceScore +
-                ", giftsPreferences=" + giftsPreferences +
-                ", niceScoreBonus=" + niceScoreBonus +
-                ", elf='" + elf + '\'' +
-                '}';
+        return "{"
+                + "id=" + id
+                + ", lastName='" + lastName + '\''
+                + ", firstName='" + firstName + '\''
+                + ", age=" + age
+                + ", city='" + city + '\''
+                + ", niceScore=" + niceScore
+                + ", giftsPreferences=" + giftsPreferences
+                + ", niceScoreBonus=" + niceScoreBonus
+                + ", elf='" + elf + '\''
+                + '}';
     }
 }

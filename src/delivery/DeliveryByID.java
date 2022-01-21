@@ -1,21 +1,17 @@
 package delivery;
 
-import children.Child;
-import gifts.Gift;
 import workshop.Santa;
-
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class DeliveryByID implements DeliveryStrategy {
     private String name;
 
-    public DeliveryByID(String name) {
+    public DeliveryByID(final String name) {
         this.name = name;
     }
 
+    /**
+     * set the list of children in the state sorted by their id
+     */
     @Override
     public void delivery() {
         Santa santa = Santa.getInstance();

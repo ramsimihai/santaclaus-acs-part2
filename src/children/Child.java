@@ -2,8 +2,6 @@ package children;
 
 import elves.Elf;
 import gifts.Gift;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 import scores.AverageScoreStrategy;
 
 import java.util.ArrayList;
@@ -221,7 +219,7 @@ public class Child {
     /**
      * setter of a new elf from a specified change to the child
      */
-    public void setElf(Elf elf) {
+    public void setElf(final Elf elf) {
         this.elf = elf;
     }
 
@@ -239,61 +237,25 @@ public class Child {
         return niceScoreBonus;
     }
 
-    public void setNiceScoreCity(Double niceScoreCity) {
+    /**
+     * setter of child's niceScoreCity
+     */
+    public void setNiceScoreCity(final Double niceScoreCity) {
         this.niceScoreCity = niceScoreCity;
     }
 
+    /**
+     * getter of child's niceScoreCity
+     */
     public Double getNiceScoreCity() {
         return niceScoreCity;
     }
 
     /**
-     * creates a JSONObject based on child parameters to be added in another
-     * JSONArray to create the output requested
-     * @return JSONObject containing all the data requested from a child
+     * getter of child's initial budget
      */
-    public JSONObject getJSON() {
-        JSONObject newChildJSON = new JSONObject();
-
-        // put some infos in the JSONObject
-        newChildJSON.put("id", id);
-        newChildJSON.put("lastName", lastName);
-        newChildJSON.put("firstName", firstName);
-        newChildJSON.put("city", city);
-        newChildJSON.put("age", age);
-
-        // creating a JSONArray for the gift preferences of the child
-        JSONArray giftPreferencesJSON = new JSONArray();
-        for (String preference : giftsPreferences) {
-            giftPreferencesJSON.add(preference);
-        }
-        newChildJSON.put("giftsPreferences", giftPreferencesJSON);
-        newChildJSON.put("averageScore", averageScore);
-
-        // creating a JSONArray for the nice score history of the child
-        JSONArray niceScoreHistoryJSON = new JSONArray();
-        for (Double score : niceScore) {
-            niceScoreHistoryJSON.add(score);
-        }
-        newChildJSON.put("niceScoreHistory", niceScoreHistoryJSON);
-        newChildJSON.put("assignedBudget", initialBudget);
-
-        // creating a JSONArray of received gifts & a JSONObject containing the data from
-        // every gift that is received by the child
-        JSONArray receivedGiftsJSON = new JSONArray();
-        for (Gift gift : receivedGifts) {
-            JSONObject receivedGiftJSON = new JSONObject();
-
-            receivedGiftJSON.put("productName", gift.getProductName());
-            receivedGiftJSON.put("price", gift.getPrice());
-            receivedGiftJSON.put("category", gift.getCategory());
-
-            receivedGiftsJSON.add(receivedGiftJSON);
-        }
-
-        newChildJSON.put("receivedGifts", receivedGiftsJSON);
-
-        return newChildJSON;
+    public Double getInitialBudget() {
+        return initialBudget;
     }
 
     /**
@@ -301,22 +263,22 @@ public class Child {
      */
     @Override
     public String toString() {
-        return "Child{" +
-                "id=" + id +
-                ", lastName='" + lastName + '\'' +
-                ", firstName='" + firstName + '\'' +
-                ", age=" + age +
-                ", city='" + city + '\'' +
-                ", niceScore=" + niceScore +
-                ", giftsPreferences=" + giftsPreferences +
-                ", averageScore=" + averageScore +
-                ", strategy=" + strategy +
-                ", initialBudget=" + initialBudget +
-                ", assignedBudget=" + assignedBudget +
-                ", receivedGifts=" + receivedGifts +
-                ", niceScoreBonus=" + niceScoreBonus +
-                ", elf=" + elf +
-                ", niceScoreCity=" + niceScoreCity +
-                '}';
+        return "{"
+                + "id=" + id
+                + ", lastName='" + lastName + '\''
+                + ", firstName='" + firstName + '\''
+                + ", age=" + age
+                + ", city='" + city + '\''
+                + ", niceScore=" + niceScore
+                + ", giftsPreferences=" + giftsPreferences
+                + ", averageScore=" + averageScore
+                + ", strategy=" + strategy
+                + ", initialBudget=" + initialBudget
+                + ", assignedBudget=" + assignedBudget
+                + ", receivedGifts=" + receivedGifts
+                + ", niceScoreBonus=" + niceScoreBonus
+                + ", elf=" + elf
+                + ", niceScoreCity=" + niceScoreCity
+                + '}';
     }
 }

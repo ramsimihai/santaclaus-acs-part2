@@ -9,7 +9,7 @@ import java.util.List;
 public class YellowElf extends Elf {
     private Child unluckyKiddo;
 
-    public YellowElf(String name) {
+    public YellowElf(final String name) {
         super(name);
     }
 

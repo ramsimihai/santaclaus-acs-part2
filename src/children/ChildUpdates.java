@@ -39,17 +39,17 @@ public class ChildUpdates {
         return id;
     }
 
-    public Elf getNewElf() {
+    public final Elf getNewElf() {
         return newElf;
     }
 
     @Override
-    public String toString() {
-        return "ChildUpdates{" +
-                "id=" + id +
-                ", niceScore=" + niceScore +
-                ", giftsPreferences=" + giftsPreferences +
-                ", newElf=" + newElf +
-                '}';
+    public final String toString() {
+        return "{"
+                + "id=" + id
+                + ", niceScore=" + niceScore
+                + ", giftsPreferences=" + giftsPreferences
+                + ", newElf=" + newElf
+                + '}';
     }
 }

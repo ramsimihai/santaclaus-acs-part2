@@ -1,7 +1,10 @@
 package elves;
 
+import static common.Constants.ONE_HUNDRED;
+import static common.Constants.THIRTY;
+
 public class PinkElf extends Elf {
-    public PinkElf(String name) {
+    public PinkElf(final String name) {
         super(name);
     }
 
@@ -10,6 +13,7 @@ public class PinkElf extends Elf {
      */
     @Override
     public Double execute() {
-        return budget = budget + budget * 30 / 100;
+        budget = budget + budget * THIRTY / ONE_HUNDRED;
+        return budget;
     }
 }

@@ -55,18 +55,25 @@ public class Gift {
         return quantity;
     }
 
-    public void setQuantity(final int quantity) { this.quantity = quantity; }
+    /**
+     * setter for amount of available gifts
+     * @param quantity
+     */
+    public void setQuantity(final int quantity) {
+        this.quantity = quantity;
+    }
+
     /**
      * toString() method for printing purposes
      * @return String
      */
     @Override
     public String toString() {
-        return "Gift{" +
-                "productName='" + productName + '\'' +
-                ", price=" + price +
-                ", category='" + category + '\'' +
-                ", quantity=" + quantity +
-                '}';
+        return "{"
+                + "productName='" + productName + '\''
+                + ", price=" + price
+                + ", category='" + category + '\''
+                + ", quantity=" + quantity
+                + '}';
     }
 }

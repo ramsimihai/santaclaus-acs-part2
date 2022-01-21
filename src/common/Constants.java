@@ -17,6 +17,8 @@ public final class Constants {
     public static final Integer TEEN_NUMBER = 18;
     public static final Integer SECOND_ANGEL_NUMBER = 10;
     public static final Double ANGEL_NUMBER = 10.0;
+    public static final Integer THIRTY = 30;
+    public static final Integer ONE_HUNDRED = 100;
 
     private Constants() {
         //constructor for checkstyle
