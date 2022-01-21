@@ -1,7 +1,5 @@
 package delivery;
 
-import elves.*;
-
 public class DeliveryStrategyFactory {
     public DeliveryStrategy createDeliveryStrategy(String name) {
         switch (name) {

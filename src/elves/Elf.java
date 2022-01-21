@@ -11,21 +11,17 @@ public abstract class Elf {
         this.name = name;
     }
 
+    public final void setBudget(final Double budget) {
+        this.budget = budget;
+    }
+
     public String getName() {
         return name;
     }
 
-    public void setBudget(Double budget) {
-        this.budget = budget;
-    }
-
+    /**
+     * executes a functionality of the specified elf
+     * @return
+     */
     public abstract Double execute();
-
-    @Override
-    public String toString() {
-        return "{" +
-                "name='" + name + '\'' +
-                ", budget=" + budget +
-                '}';
-    }
 }

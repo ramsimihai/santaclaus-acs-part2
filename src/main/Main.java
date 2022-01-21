@@ -44,7 +44,6 @@ public final class Main {
 
         for (File file : Objects.requireNonNull(directory.listFiles())) {
             String filename = file.getPath().substring(SECOND_ANGEL_NUMBER);
-            System.out.println("TEST IS: " + filename);
             String filepath = Constants.OUTPUT_PATH + filename;
             File out = new File(filepath);
 

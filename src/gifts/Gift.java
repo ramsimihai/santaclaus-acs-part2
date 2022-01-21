@@ -62,10 +62,11 @@ public class Gift {
      */
     @Override
     public String toString() {
-        return "{"
-                + "productName='" + productName + '\''
-                + ", price=" + price
-                + ", category='" + category + '\''
-                + '}';
+        return "Gift{" +
+                "productName='" + productName + '\'' +
+                ", price=" + price +
+                ", category='" + category + '\'' +
+                ", quantity=" + quantity +
+                '}';
     }
 }

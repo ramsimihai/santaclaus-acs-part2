@@ -263,9 +263,9 @@ public final class Santa {
     public void onlyYellowElfsWork() {
         for (Child child : children) {
             if (child.getElf().getName().equals("yellow")) {
-                child.getElf().execute();
                 if (child.getElf() instanceof YellowElf) {
                     ((YellowElf) child.getElf()).setUnluckyKiddo(child);
+                    child.getElf().execute();
                 }
             }
         }
@@ -301,16 +301,15 @@ public final class Santa {
                 for (Gift singleGift : availableGifts) {
                     // deliver gifts to his as#
                     if (singleGift.getCategory().equals(preferredGift)
-                            && singleGift.getPrice() < child.getAssignedBudget()) {
+                            && singleGift.getPrice() < child.getAssignedBudget()
+                            && singleGift.getQuantity() != 0) {
+
                         child.getReceivedGifts().add(singleGift);
                         child.setBudget(child.getAssignedBudget()
                                 - singleGift.getPrice());
 
                         // decrease gifts quantity and removes
                         availableGifts.get(i).setQuantity(availableGifts.get(i).getQuantity() - 1);
-                        if (availableGifts.get(i).getQuantity() == 0) {
-                            availableGifts.remove(singleGift);
-                        }
 
                         break;
                     }
@@ -363,6 +362,14 @@ public final class Santa {
             }
         }
     }
+
+    public void removesUnavailableGifts() {
+        if (availableGifts == null) {
+            return;
+        }
+
+        availableGifts.removeIf(gift -> gift.getQuantity() == 0);
+    }
     /**
      * MY JOB STARSTS! NOW! delivery in noYears gifts to good kiddos 100%
      * @return a JSONArray used to build the output
@@ -397,6 +404,8 @@ public final class Santa {
 
             // delivery for unlucky kiddos
             onlyYellowElfsWork();
+
+            // removes unavailable gifts
 
             sortChildren();
             // extract the output

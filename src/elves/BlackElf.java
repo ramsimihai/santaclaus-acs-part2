@@ -5,6 +5,9 @@ public class BlackElf extends Elf {
         super(name);
     }
 
+    /**
+     * the black's elf skill is to ruin kiddos days
+     */
     @Override
     public Double execute() {
        return budget = budget - budget * 30 / 100;

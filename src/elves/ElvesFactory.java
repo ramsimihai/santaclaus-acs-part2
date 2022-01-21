@@ -1,7 +1,12 @@
 package elves;
 
 public class ElvesFactory {
-    public Elf createElf(String name) {
+    /**
+     * factory to create elves that executes a function
+     * @param name the name of the type of elf
+     * @return
+     */
+    public Elf createElf(final String name) {
         switch (name) {
             case "white": return new WhiteElf(name);
             case "black": return new BlackElf(name);

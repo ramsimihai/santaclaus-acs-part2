@@ -37,7 +37,7 @@ public class ChildrenUpdatesInput {
         return id;
     }
 
-    public String getElf() {
+    public final String getElf() {
         return elf;
     }
 
