@@ -1,7 +1,6 @@
 Starting audit...
 [ERROR] /home/student/santaclaus-acs-part2/./src/delivery/DeliveryStrategyFactory.java:10:9: switch without "default" clause. [MissingSwitchDefault]
-[ERROR] /home/student/santaclaus-acs-part2/./src/output/ChildrenOutput.java:15:31: Parameter child should be final. [FinalParameters]
 [ERROR] /home/student/santaclaus-acs-part2/./src/fileio/InputLoader.java:37:5: Method length is 160 lines (max allowed is 150). [MethodLength]
 [ERROR] /home/student/santaclaus-acs-part2/./src/elves/ElvesFactory.java:9:9: switch without "default" clause. [MissingSwitchDefault]
 Audit done.
-Checkstyle ends with 4 errors.
+Checkstyle ends with 3 errors.

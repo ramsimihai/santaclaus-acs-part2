@@ -410,20 +410,6 @@ public final class Santa {
         }
     }
 
-//    /**
-//     * create the output in JSON format by maintaing a specified format
-//     * @return a JSONArray used to build the output
-//     */
-//    public JSONArray getOutput() {
-//        JSONArray childrenJSON = new JSONArray();
-//        for (Child child : children) {
-//            JSONObject childJSON = child.getJSON();
-//            childrenJSON.add(childJSON);
-//        }
-//
-//        return childrenJSON;
-//    }
-
     /**
      * add initial data from the extracted initial data input
      * @param input aka an InitialData object that has the first year situation
@@ -484,17 +470,16 @@ public final class Santa {
         ArrayList<Child> initialChildren = new ArrayList<>();
         ElvesFactory elvesFactory = new ElvesFactory();
         for (ChildrenInput childInput : childrenInput) {
-            Child newChild = new Child(
-                    childInput.getId(),
+            Child newChild = new Child.ChildBuilder(childInput.getId(),
                     childInput.getLastName(),
                     childInput.getFirstName(),
                     childInput.getAge(),
                     childInput.getCity(),
                     childInput.getNiceScore(),
-                    childInput.getGiftsPreferences(),
-                    childInput.getNiceScoreBonus(),
-                    elvesFactory.createElf(childInput.getElf())
-            );
+                    childInput.getGiftsPreferences())
+                    .niceScoreBonus(childInput.getNiceScoreBonus())
+                    .builderElf(elvesFactory.createElf(childInput.getElf()))
+                    .build();
             initialChildren.add(newChild);
         }
 

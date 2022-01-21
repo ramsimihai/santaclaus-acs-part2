@@ -12,7 +12,7 @@ public class ChildrenOutput {
      * JSONArray to create the output requested
      * @return JSONObject containing all the data requested from a child
      */
-    public JSONObject getJSON(Child child) {
+    public JSONObject getJSON(final Child child) {
         JSONObject newChildJSON = new JSONObject();
 
         // put some infos in the JSONObject

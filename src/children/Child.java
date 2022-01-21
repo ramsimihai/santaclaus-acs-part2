@@ -6,9 +6,9 @@ import scores.AverageScoreStrategy;
 
 import java.util.ArrayList;
 
-public class Child {
+public final class Child {
     /** id of the child to find him in the database */
-    private int id;
+    private final int id;
     /** last name of the child */
     private final String lastName;
     /** first name of the child */
@@ -21,7 +21,7 @@ public class Child {
      * an arraylist of niceScores
      * a niceScore is added every year
      */
-    private ArrayList<Double> niceScore = new ArrayList<>();
+    private final ArrayList<Double> niceScore;
     /** arraylist of gift preferences from where the child will get gifts */
     private final ArrayList<String> giftsPreferences;
     /** an average score calculated based on a strategy */
@@ -35,66 +35,127 @@ public class Child {
     /** a list of received gifts in every year by a children */
     private ArrayList<Gift> receivedGifts;
     /** extra niceScore used to calculate averageScore */
-    private Double niceScoreBonus;
+    private final Double niceScoreBonus;
     /** elf that does delivery of gifts for a child */
     private Elf elf;
     /** nice score based from the city this kiddo lives */
     private Double niceScoreCity;
 
-    /**
-     * constructor to create an instance of a Child with specified parameteres
-     * and some of the fields will be instantiated with default values
-     * @param id
-     * @param lastName
-     * @param firstName
-     * @param age
-     * @param city
-     * @param niceScore
-     * @param giftsPreferences
-     * @param niceScoreBonus
-     * @param elf
-     */
-    public Child(final int id,
-                 final String lastName,
-                 final String firstName,
-                 final int age,
-                 final String city,
-                 final Double niceScore,
-                 final ArrayList<String> giftsPreferences,
-                 final Double niceScoreBonus,
-                 final Elf elf) {
-        this.id = id;
-        this.lastName = lastName;
-        this.firstName = firstName;
-        this.age = age;
-        this.city = city;
-        this.niceScore.add(niceScore);
-        this.giftsPreferences = giftsPreferences;
-        this.averageScore = 0.0;
-        this.strategy = null;
-        this.assignedBudget = 0.0;
-        this.receivedGifts = new ArrayList<>();
-        this.initialBudget = 0.0;
-        this.niceScoreBonus = niceScoreBonus;
-        this.elf = elf;
+    public static class ChildBuilder {
+        private final int id;
+        private final String lastName;
+        private final String firstName;
+        private final int age;
+        private final String city;
+        private final ArrayList<Double> niceScore = new ArrayList<>();
+        private final ArrayList<String> giftsPreferences;
+        private Double averageScore = 0.0;
+        private AverageScoreStrategy strategy;
+        private final Double initialBudget = 0.0;
+        private Double assignedBudget = 0.0;
+        private ArrayList<Gift> receivedGifts = new ArrayList<>();
+        private Double niceScoreBonus = 0.0;
+        private Elf elf;
+
+        public ChildBuilder(final int id,
+                            final String lastName,
+                            final String firstName,
+                            final int age,
+                            final String city,
+                            final Double niceScore,
+                            final ArrayList<String> giftsPreferences) {
+            this.id = id;
+            this.lastName = lastName;
+            this.firstName = firstName;
+            this.age = age;
+            this.city = city;
+            this.niceScore.add(niceScore);
+            this.giftsPreferences = giftsPreferences;
+        }
+
+        /**
+         * builder setter for averageScore
+         */
+        public final ChildBuilder averageScore(final Double builderAverageScore) {
+            this.averageScore = builderAverageScore;
+            return this;
+        }
+
+        /**
+         * builder setter for strategy
+         */
+        public final ChildBuilder strategy(final AverageScoreStrategy builderStrategy) {
+            this.strategy = builderStrategy;
+            return this;
+        }
+
+        /**
+         * builder setter for assignedBudget
+         */
+        public final ChildBuilder assignedBudget(final Double builderAssignedBudget) {
+            this.assignedBudget = builderAssignedBudget;
+            return this;
+        }
+
+        /**
+         * builder setter for receivedGifts
+         */
+        public final ChildBuilder receivedGifts(final ArrayList<Gift> builderReceivedGifts) {
+            this.receivedGifts = builderReceivedGifts;
+            return this;
+        }
+
+        /**
+         * builder setter for niceScoreBonus
+         */
+        public final ChildBuilder niceScoreBonus(final Double builderNiceScoreBonus) {
+            this.niceScoreBonus = builderNiceScoreBonus;
+            return this;
+        }
+
+        /**
+         * builder setter for elf
+         */
+        public final ChildBuilder builderElf(final Elf builderElf) {
+            this.elf = builderElf;
+            return this;
+        }
+
+        /**
+         * builder setter for niceScoreCity
+         */
+        public final ChildBuilder niceScoreCity() {
+            return this;
+        }
+
+        /**
+         * builder for Child instance
+         */
+        public final Child build() {
+            return new Child(this);
+        }
     }
 
     /**
-     * default constructor
+     * constructor to create an instance of a Child with specified parameters
+     * extracted from a childBuilder instance that already build the fields
+     * @param childBuilder
      */
-    public Child() {
-        this.id = 0;
-        this.lastName = null;
-        this.firstName = null;
-        this.age = 0;
-        this.city = null;
-        this.giftsPreferences = null;
-        this.averageScore = 0.0;
-        this.strategy = null;
-        this.assignedBudget = 0.0;
-        this.initialBudget = 0.0;
-        this.niceScoreBonus = 0.0;
-        this.elf = null;
+    private Child(final ChildBuilder childBuilder) {
+        this.id = childBuilder.id;
+        this.lastName = childBuilder.lastName;
+        this.firstName = childBuilder.firstName;
+        this.age = childBuilder.age;
+        this.city = childBuilder.city;
+        this.niceScore = childBuilder.niceScore;
+        this.giftsPreferences = childBuilder.giftsPreferences;
+        this.averageScore = childBuilder.averageScore;
+        this.strategy = childBuilder.strategy;
+        this.assignedBudget = childBuilder.assignedBudget;
+        this.receivedGifts = childBuilder.receivedGifts;
+        this.initialBudget = childBuilder.initialBudget;
+        this.niceScoreBonus = childBuilder.niceScoreBonus;
+        this.elf = childBuilder.elf;
     }
 
     /**
