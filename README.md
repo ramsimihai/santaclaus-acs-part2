@@ -1,6 +1,6 @@
 # santaclaus-acs-part2
 
-321CA - Mihai Daniel Soare
+321CA - Mihai Daniel Soare \
 Object Oriented Programming Course
 
 Project Stage 2 - Santa Claus is coming to ACS
